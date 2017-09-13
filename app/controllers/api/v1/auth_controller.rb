@@ -2,11 +2,12 @@ class Api::V1::AuthController < ApplicationController
   before_action :authenticate_token!, only: [:refresh]
 
   def login
-    @user = User.find_by(email: params[:user][:email])
+    binding.pry
+    @user = User.find_by(username: params[:user][:username])
     if !@user 
       render json: {
         errors: {
-          email: ["Unable to find a user with the provided email address"]
+          username: ["Unable to find a user with the provided username"]
         }
       }, status: 500
     elsif @user && @user.authenticate(params[:user][:password]) 
@@ -14,7 +15,7 @@ class Api::V1::AuthController < ApplicationController
     else 
       render json: {
         errors: {
-          password: ["Password does not match the provided email"]
+          password: ["Password does not match the provided password"]
         }
       }, status: 500
     end
